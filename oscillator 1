@@ -1,0 +1,60 @@
+#include <iostream>
+#include <cmath>
+#include <fstream>
+using namespace std;
+
+int main()
+{
+    //Konstanter
+    double k = 1.0;        // fjederkonstant
+    double m = 1.0;        // massen
+
+    //Startsbetingelser
+    double x0 = 1.0;       // startposition
+    double v0 = 0.0;       // starthastighed
+
+    //Parametre
+    double w = sqrt(k / m); // vinkelfrekvens
+    double T = 2.0 * M_PI / w; // periode
+
+    double dt = T / 1000.0;    //timestep
+    double tmaks = 100.0 * T;  //simuler 100 perioder
+
+    ofstream euler("oscillator_euler.dat");
+    ofstream teori("oscillator_teori.dat");
+    ofstream energi("oscillator_energi.dat");
+
+    //
+    double t = 0;
+    double x = x0;
+    double v = v0;
+
+    while (t < tmaks)
+    {
+        double F = -k * x;
+        double a = F / m;
+
+        double xn = x + v * dt;
+        double vn = v + a * dt;
+
+        //Beregn energi
+        double E = 0.5 * m * v * v + 0.5 * k * x * x;
+
+        double xteori = x0 * cos(w * t) + (v0 / w) * sin(w * t);
+        double vteori = -x0 * w * sin(w * t) + v0 * cos(w * t);
+
+        sim << t << " " << x << " " << m * v << endl;
+        teori << t << " " << xteori << " " << m * vteori << endl;
+        energi << t << " " << E << endl;
+
+        x = xn;
+        v = vn;
+        t += dt;
+    }
+
+    sim.close();
+    teori.close();
+    energi.close();
+
+    return 0;
+}
